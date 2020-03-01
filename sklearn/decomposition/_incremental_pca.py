@@ -194,8 +194,8 @@ class IncrementalPCA(_BasePCA):
         self.singular_values_ = None
         self.noise_variance_ = None
 
-        X = check_array(X, accept_sparse=['csr', 'csc', 'lil'],
-                        copy=self.copy, dtype=[np.float64, np.float32])
+        X = self._validate_data(X, accept_sparse=['csr', 'csc', 'lil'],
+                                copy=self.copy, dtype=[np.float64, np.float32])
         n_samples, n_features = X.shape
 
         if self.batch_size is None:
@@ -270,7 +270,7 @@ class IncrementalPCA(_BasePCA):
             self.mean_ = .0
             self.var_ = .0
 
-        # Update stats - they are 0 if this is the fisrt step
+        # Update stats - they are 0 if this is the first step
         col_mean, col_var, n_total_samples = \
             _incremental_mean_and_var(
                 X, last_mean=self.mean_, last_variance=self.var_,

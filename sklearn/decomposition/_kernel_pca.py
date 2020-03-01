@@ -9,7 +9,8 @@ from scipy.sparse.linalg import eigsh
 
 from ..utils import check_random_state
 from ..utils.extmath import svd_flip
-from ..utils.validation import check_is_fitted, check_array
+from ..utils.validation import (check_is_fitted, check_array,
+                                _check_psd_eigenvalues)
 from ..exceptions import NotFittedError
 from ..base import BaseEstimator, TransformerMixin
 from ..preprocessing import KernelCenterer
@@ -75,11 +76,10 @@ class KernelPCA(TransformerMixin, BaseEstimator):
         When n_components is None, this parameter is ignored and components
         with zero eigenvalues are removed regardless.
 
-    random_state : int, RandomState instance or None, optional (default=None)
-        If int, random_state is the seed used by the random number generator;
-        If RandomState instance, random_state is the random number generator;
-        If None, the random number generator is the RandomState instance used
-        by `np.random`. Used when ``eigen_solver`` == 'arpack'.
+    random_state : int, RandomState instance, default=None
+        Used when ``eigen_solver`` == 'arpack'. Pass an int for reproducible
+        results across multiple function calls.
+        See :term:`Glossary <random_state>`.
 
         .. versionadded:: 0.18
 
@@ -211,6 +211,10 @@ class KernelPCA(TransformerMixin, BaseEstimator):
                                                 maxiter=self.max_iter,
                                                 v0=v0)
 
+        # make sure that the eigenvalues are ok and fix numerical issues
+        self.lambdas_ = _check_psd_eigenvalues(self.lambdas_,
+                                               enable_warnings=False)
+
         # flip eigenvectors' sign to enforce deterministic output
         self.alphas_, _ = svd_flip(self.alphas_,
                                    np.empty_like(self.alphas_).T)
@@ -271,7 +275,7 @@ class KernelPCA(TransformerMixin, BaseEstimator):
         self : object
             Returns the instance itself.
         """
-        X = check_array(X, accept_sparse='csr', copy=self.copy_X)
+        X = self._validate_data(X, accept_sparse='csr', copy=self.copy_X)
         self._centerer = KernelCenterer()
         K = self._get_kernel(X)
         self._fit_transform(K)
