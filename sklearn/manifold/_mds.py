@@ -275,7 +275,7 @@ def smacof(dissimilarities, metric=True, n_components=2, init=None, n_init=8,
         return best_pos, best_stress
 
 
-def svd(dissimilarities, n_components=2):
+def svd_scaler(dissimilarities, n_components=2):
     """
     Computes multidimensional scaling using SVD algorithm
 
@@ -285,6 +285,8 @@ def svd(dissimilarities, n_components=2):
         Pairwise dissimilarities between the points. Must be euclidean.
     n_components : int, optional, default: 2
         Number of dimension in which to immerse the dissimilarities.
+
+        .. versionadded:: 0.23
 
     Returns
     ----------
@@ -517,8 +519,8 @@ class MDS(BaseEstimator):
         elif self.method == "svd":
             if not self.metric:
                 raise ValueError("Using SVD requires metric=True")
-            self.embedding_, self.stress_ = svd(self.dissimilarity_matrix_,
-                                                n_components=self.n_components)
+            self.embedding_, self.stress_ = svd_scaler(self.dissimilarity_matrix_,
+                                                       n_components=self.n_components)
         else:
             raise ValueError("Method must be 'smacof' or 'svd'."
                              " Got %s instead" % str(self.method))
