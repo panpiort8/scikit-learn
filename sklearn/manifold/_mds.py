@@ -284,8 +284,6 @@ def svd_scaler(dissimilarities, n_components=2):
     n_components : int, optional, default: 2
         Number of dimension in which to immerse the dissimilarities.
 
-        .. versionadded:: 0.23
-
     Returns
     ----------
     X : ndarray, shape (n_samples, n_components)
@@ -346,9 +344,6 @@ class MDS(BaseEstimator):
     n_components : int, optional, default: 2
         Number of dimensions in which to immerse the dissimilarities.
 
-    method: string, optional, default: smacof
-        Methods for solving the MDS problem are "smacof" and "svd".
-
     metric : boolean, optional, default: True
         If  ``method=='svd'``, metric must be set to True.
         If ``True``, perform metric MDS; otherwise, perform nonmetric MDS.
@@ -395,6 +390,10 @@ class MDS(BaseEstimator):
         - 'precomputed':
             Pre-computed dissimilarities are passed directly to ``fit`` and
             ``fit_transform``.
+
+    method: string, optional, default: smacof
+        Methods for solving the MDS problem are "smacof" and "svd".
+        .. versionadded:: 0.23
 
     Attributes
     ----------
