@@ -513,8 +513,8 @@ class MDS(BaseEstimator):
         elif self.method == "svd":
             if not self.metric:
                 raise ValueError("Using SVD requires metric=True")
-            self.embedding_, self.stress_ = svd_scaler(self.dissimilarity_matrix_,
-                                                       n_components=self.n_components)
+            self.embedding_, self.stress_ = svd_scaler(
+                self.dissimilarity_matrix_, n_components=self.n_components)
         else:
             raise ValueError("Method must be 'smacof' or 'svd'."
                              " Got %s instead" % str(self.method))

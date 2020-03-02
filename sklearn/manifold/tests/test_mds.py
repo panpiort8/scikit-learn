@@ -103,7 +103,8 @@ def test_svd_error():
                     [3, 2, 0, 1],
                     [4, 2, 1, 0]])
 
-    with pytest.raises(ValueError, match="Dissimilarity matrix must be euclidean"):
+    with pytest.raises(ValueError,
+                       match="Dissimilarity matrix must be euclidean"):
         mds.svd_scaler(sim)
 
 
@@ -154,4 +155,3 @@ def test_MDS_svd():
             or np.allclose(mds_clf.embedding_, -X_true_1)
             or np.allclose(mds_clf.embedding_, X_true_2)
             or np.allclose(mds_clf.embedding_, -X_true_2))
-
